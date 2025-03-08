@@ -9,16 +9,16 @@ export default function Header() {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    async function fetchUser() {
-      const user = await account.get();
-      if (user) {
+    const getCurrentUser = async () => {
+      try {
+        const user = await account.get();
         setUserName(user.name);
+      } catch (error) {
+        return null;
       }
-    }
-
-    fetchUser();
+    };
+    getCurrentUser();
   }, []);
-
   const navItems = [
     { name: "Pricing", href: "/pricing" },
     { name: "Docs", href: "/docs" },
@@ -50,7 +50,7 @@ export default function Header() {
           </nav>
 
           {/* Username */}
-          <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+          {/*<div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <Link
               href="/dashboard  "
               className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
@@ -58,9 +58,9 @@ export default function Header() {
               <User className="inline-block h-5 w-5 mr-2" />
               {userName}
             </Link>
-          </div>
+          </div>*/}
 
-          {/*{!userName ? (
+          {userName ? (
             <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
               <Link
                 href="/dashboard  "
@@ -80,7 +80,7 @@ export default function Header() {
                 Login
               </Link>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </header>
