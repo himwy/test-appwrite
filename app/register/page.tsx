@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import type React from "react";
-
+import { account, ID } from "../appwrite/config";
 import { User, Lock, Mail } from "lucide-react";
 import Link from "next/link";
 
@@ -9,12 +9,19 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle registration logic here
-  };
-
+  async function handleRegister() {
+    console.log("Registering...");
+    setLoading(true);
+    try {
+      await account.create(ID.unique(), email, password, name);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
@@ -23,7 +30,7 @@ export default function RegisterPage() {
             Create your account
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleRegister}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="name" className="sr-only">
@@ -94,7 +101,7 @@ export default function RegisterPage() {
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Register
+              {loading ? "Loading..." : "Register"}
             </button>
           </div>
         </form>
