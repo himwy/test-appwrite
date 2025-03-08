@@ -4,6 +4,7 @@ import type React from "react";
 import { account, ID } from "../appwrite/config";
 import { User, Lock, Mail } from "lucide-react";
 import Link from "next/link";
+import { v4 as uuidv4 } from "uuid";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -13,17 +14,11 @@ export default function RegisterPage() {
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
-    console.log("Registering...");
+    console.log(process.env.EB_APPWRITE_PROJECT_ID);
     setLoading(true);
     try {
-      await account.create(ID.unique(), email, password, name);
-      try {
-        await account.createSession(email, password);
-        setEmail("");
-        setPassword("");
-      } catch (error) {
-        console.error(error);
-      }
+      const userId = uuidv4();
+      await account.create(userId, email, password, name);
     } catch (error) {
       console.error(error);
     } finally {
