@@ -12,6 +12,20 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await account.createEmailPasswordSession(email, password);
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     console.log(process.env.EB_APPWRITE_PROJECT_ID);
@@ -19,6 +33,7 @@ export default function RegisterPage() {
     try {
       const userId = uuidv4();
       await account.create(userId, email, password, name);
+      handleLogin;
     } catch (error) {
       console.error(error);
     } finally {

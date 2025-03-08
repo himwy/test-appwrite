@@ -5,7 +5,6 @@ import { account, ID } from "../appwrite/config";
 
 import { User, Lock } from "lucide-react";
 import Link from "next/link";
-import { setMaxListeners } from "events";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -13,12 +12,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  async function handleLogin() {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
     setLoading(true);
     try {
-      await account.createSession(email, password);
+      await account.createEmailPasswordSession(email, password);
       setEmail("");
       setPassword("");
+      window.location.href = "/dashboard";
     } catch (error) {
       console.error(error);
     } finally {
