@@ -11,11 +11,19 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleRegister() {
+  async function handleRegister(e: React.FormEvent) {
+    e.preventDefault();
     console.log("Registering...");
     setLoading(true);
     try {
       await account.create(ID.unique(), email, password, name);
+      try {
+        await account.createSession(email, password);
+        setEmail("");
+        setPassword("");
+      } catch (error) {
+        console.error(error);
+      }
     } catch (error) {
       console.error(error);
     } finally {

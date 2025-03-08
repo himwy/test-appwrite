@@ -17,6 +17,8 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await account.createSession(email, password);
+      setEmail("");
+      setPassword("");
     } catch (error) {
       console.error(error);
     } finally {
